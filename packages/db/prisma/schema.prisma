@@ -14,12 +14,48 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 model User {
+  id        String    @id @default(cuid())
+  email     String    @unique
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  websites  Website[]
+}
+
+model Website {
   id        String   @id @default(cuid())
-  email     String   @unique
-  name      String?
-  password  String
+  url       String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  ticks WebsiteTick[]
+}
+
+model Validator {
+  id        String   @id @default(cuid())
+  publicKey String
+  location  String
+  ip        String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  ticks WebsiteTick[]
+}
+
+model WebsiteTick {
+  id          String    @id @default(cuid())
+  websiteId   String
+  validatorId String
+  status      WebsiteTickStatus
+  latency     Int       // in milliseconds
+  validator   Validator @relation(fields: [validatorId], references: [id])
+  website     Website   @relation(fields: [websiteId], references: [id])
+  createdAt   DateTime  @default(now())
+}
+
+enum WebsiteTickStatus {
+  UP
+  DOWN
 }
