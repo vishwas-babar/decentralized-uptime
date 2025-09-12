@@ -18,5 +18,8 @@
   "prettier.requireConfig": true,
   "typescript.preferences.includePackageJsonAutoImports": "auto",
   "files.insertFinalNewline": true,
-  "files.trimTrailingWhitespace": true
+  "files.trimTrailingWhitespace": true,
+  "[prisma]": {
+    "editor.defaultFormatter": "Prisma.prisma"
+  }
 }
