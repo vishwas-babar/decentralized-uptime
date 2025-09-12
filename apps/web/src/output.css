@@ -592,6 +592,9 @@
   .max-w-\[calc\(100\%-2rem\)\] {
     max-width: calc(100% - 2rem);
   }
+  .max-w-lg {
+    max-width: var(--container-lg);
+  }
   .max-w-md {
     max-width: var(--container-md);
   }
@@ -1724,6 +1727,13 @@
       }
     }
   }
+  .hover\:border-slate-500 {
+    &:hover {
+      @media (hover: hover) {
+        border-color: var(--color-slate-500);
+      }
+    }
+  }
   .hover\:border-slate-600 {
     &:hover {
       @media (hover: hover) {
@@ -1752,6 +1762,16 @@
     &:hover {
       @media (hover: hover) {
         background-color: var(--color-emerald-700);
+      }
+    }
+  }
+  .hover\:bg-slate-600\/50 {
+    &:hover {
+      @media (hover: hover) {
+        background-color: color-mix(in srgb, oklch(44.6% 0.043 257.281) 50%, transparent);
+        @supports (color: color-mix(in lab, red, red)) {
+          background-color: color-mix(in oklab, var(--color-slate-600) 50%, transparent);
+        }
       }
     }
   }

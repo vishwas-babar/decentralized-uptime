@@ -100,7 +100,7 @@ export function LoginForm() {
       <div className="text-center mt-8 pt-6 border-t border-slate-700">
         <p className="text-slate-400 text-sm">Don't have an account yet?</p>
         <Link
-          to="/register"
+          to="/signup"
           className="text-emerald-400 hover:text-emerald-300 underline text-sm transition-colors"
         >
           Create your Free account now
