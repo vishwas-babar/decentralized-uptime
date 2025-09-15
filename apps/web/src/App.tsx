@@ -6,6 +6,7 @@ import DashboardPage from "./pages/DashboardPage";
 import ValidatorsPage from "./pages/ValidatorsPage";
 import MonitorsPage from "./pages/MonitorsPage";
 import "./App.css";
+import RewardsPage from "./pages/RewardsPage";
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/validators" element={<ValidatorsPage />} />
         <Route path="/monitors" element={<MonitorsPage />} />
+        <Route path="/rewards" element={<RewardsPage />} />
       </Routes>
     </Router>
   );

@@ -175,7 +175,6 @@ pnpm db:studio
 DATABASE_URL="postgresql://postgres:postgres@localhost:12325/uptime-db"
 ```
 
-
 ## 🔧 VS Code Integration
 
 The project includes VS Code settings for optimal development experience:
