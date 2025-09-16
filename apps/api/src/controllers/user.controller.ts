@@ -1,7 +1,7 @@
 import prisma from "@repo/db";
 import bcrypt from "bcryptjs";
 import { Request, Response } from "express";
-import { LoginUserSchema, RegisterUserSchema } from "../schemas/user.schema";
+import { LoginUserSchema, RegisterUserSchema } from "@repo/schema";
 import { generateToken } from "../utils/jwt";
 
 const handleLoginUser = async (req: Request, res: Response) => {
@@ -147,8 +147,6 @@ const getSessionUser = async (req: Request, res: Response) => {
         id: dbUser.id,
         name: dbUser.name,
         email: dbUser.email,
-        createdAt: dbUser.createdAt,
-        updatedAt: dbUser.updatedAt,
       },
     });
   } catch (error) {

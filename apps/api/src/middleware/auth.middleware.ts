@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from "express";
 import { verifyToken, extractTokenFromHeader } from "../utils/jwt";
-import { UserSession } from "../types/user.type";
 
 /**
  * Middleware to authenticate JWT tokens

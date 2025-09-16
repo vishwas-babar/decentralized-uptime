@@ -1,17 +1,46 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useForm } from "react-hook-form";
+import type { RegisterUser } from "@repo/schema/types";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { RegisterUserSchema } from "../../../../packages/schema/src/user/user.schema";
+import useRegisterUser from "@/lib/mutations/register-user";
+import { showToast } from "@/lib/toast";
 
 export function SignupForm() {
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [agreeTerms, setAgreeTerms] = useState(false);
-  const [newsletter, setNewsletter] = useState(false);
+  const { mutate: registerUser, isPending } = useRegisterUser();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<RegisterUser>({
+    resolver: zodResolver(RegisterUserSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      password: "",
+    },
+  });
+
+  const onSubmit = (data: RegisterUser) => {
+    registerUser(data, {
+      onSuccess: () => {
+        showToast.success(
+          "Account created successfully! Welcome to UptimeRobot."
+        );
+      },
+      onError: (error: any) => {
+        const errorMessage =
+          error?.response?.data?.message ||
+          error?.message ||
+          "Registration failed. Please try again.";
+        showToast.error(errorMessage);
+      },
+    });
+  };
 
   return (
     <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-lg p-8 shadow-2xl">
@@ -34,41 +63,22 @@ export function SignupForm() {
       </div>
 
       {/* Form */}
-      <form className="space-y-6">
-        {/* Name fields */}
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label
-              htmlFor="firstName"
-              className="block text-sm text-slate-400 mb-2"
-            >
-              First name
-            </label>
-            <Input
-              id="firstName"
-              type="text"
-              placeholder="John"
-              value={firstName}
-              onChange={e => setFirstName(e.target.value)}
-              className="bg-slate-700/50 border-slate-600 text-white placeholder:text-slate-400 focus:border-emerald-400 focus:ring-emerald-400/20"
-            />
-          </div>
-          <div>
-            <label
-              htmlFor="lastName"
-              className="block text-sm text-slate-400 mb-2"
-            >
-              Last name
-            </label>
-            <Input
-              id="lastName"
-              type="text"
-              placeholder="Doe"
-              value={lastName}
-              onChange={e => setLastName(e.target.value)}
-              className="bg-slate-700/50 border-slate-600 text-white placeholder:text-slate-400 focus:border-emerald-400 focus:ring-emerald-400/20"
-            />
-          </div>
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        {/* Full Name field - maps to 'name' in schema */}
+        <div>
+          <label htmlFor="name" className="block text-sm text-slate-400 mb-2">
+            Full name
+          </label>
+          <Input
+            id="name"
+            type="text"
+            placeholder="John Doe"
+            {...register("name")}
+            className="bg-slate-700/50 border-slate-600 text-white placeholder:text-slate-400 focus:border-emerald-400 focus:ring-emerald-400/20"
+          />
+          {errors.name && (
+            <p className="text-red-400 text-sm mt-1">{errors.name.message}</p>
+          )}
         </div>
 
         {/* Email field */}
@@ -80,54 +90,40 @@ export function SignupForm() {
             id="email"
             type="email"
             placeholder="info@example.com"
-            value={email}
-            onChange={e => setEmail(e.target.value)}
+            {...register("email")}
             className="bg-slate-700/50 border-slate-600 text-white placeholder:text-slate-400 focus:border-emerald-400 focus:ring-emerald-400/20"
           />
+          {errors.email && (
+            <p className="text-red-400 text-sm mt-1">{errors.email.message}</p>
+          )}
         </div>
 
-        {/* Password fields */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <label
-              htmlFor="password"
-              className="block text-sm text-slate-400 mb-2"
-            >
-              Password
-            </label>
-            <Input
-              id="password"
-              type="password"
-              placeholder="••••••"
-              value={password}
-              onChange={e => setPassword(e.target.value)}
-              className="bg-slate-700/50 border-slate-600 text-white placeholder:text-slate-400 focus:border-emerald-400 focus:ring-emerald-400/20"
-            />
-          </div>
-          <div>
-            <label
-              htmlFor="confirmPassword"
-              className="block text-sm text-slate-400 mb-2"
-            >
-              Confirm password
-            </label>
-            <Input
-              id="confirmPassword"
-              type="password"
-              placeholder="••••••"
-              value={confirmPassword}
-              onChange={e => setConfirmPassword(e.target.value)}
-              className="bg-slate-700/50 border-slate-600 text-white placeholder:text-slate-400 focus:border-emerald-400 focus:ring-emerald-400/20"
-            />
-          </div>
+        {/* Password field */}
+        <div>
+          <label
+            htmlFor="password"
+            className="block text-sm text-slate-400 mb-2"
+          >
+            Password
+          </label>
+          <Input
+            id="password"
+            type="password"
+            placeholder="••••••"
+            {...register("password")}
+            className="bg-slate-700/50 border-slate-600 text-white placeholder:text-slate-400 focus:border-emerald-400 focus:ring-emerald-400/20"
+          />
+          {errors.password && (
+            <p className="text-red-400 text-sm mt-1">
+              {errors.password.message}
+            </p>
+          )}
         </div>
 
-        {/* Terms and conditions checkbox */}
+        {/* Terms and conditions - just for UI, not in form data */}
         <div className="flex items-start space-x-2">
           <Checkbox
             id="terms"
-            checked={agreeTerms}
-            onCheckedChange={checked => setAgreeTerms(checked as boolean)}
             className="border-slate-600 data-[state=checked]:bg-emerald-500 data-[state=checked]:border-emerald-500 mt-0.5"
           />
           <label
@@ -151,28 +147,13 @@ export function SignupForm() {
           </label>
         </div>
 
-        {/* Newsletter checkbox */}
-        <div className="flex items-center space-x-2">
-          <Checkbox
-            id="newsletter"
-            checked={newsletter}
-            onCheckedChange={checked => setNewsletter(checked as boolean)}
-            className="border-slate-600 data-[state=checked]:bg-emerald-500 data-[state=checked]:border-emerald-500"
-          />
-          <label
-            htmlFor="newsletter"
-            className="text-sm text-slate-400 cursor-pointer"
-          >
-            Send me updates about new features and validators
-          </label>
-        </div>
-
         {/* Sign up button */}
         <Button
           type="submit"
-          className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-medium py-3 rounded-lg transition-colors"
+          disabled={isPending}
+          className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-medium py-3 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Create account
+          {isPending ? "Creating account..." : "Create account"}
         </Button>
 
         {/* Alternative signup methods */}

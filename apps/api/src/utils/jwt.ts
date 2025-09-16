@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import { config } from "../config";
-import { UserSession, AuthPayload } from "../types/user.type";
+import { UserSession, AuthPayload } from "@repo/schema/types";
 
 /**
  * Generate a JWT token for a user session

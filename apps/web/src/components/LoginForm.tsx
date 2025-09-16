@@ -1,13 +1,43 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useForm } from "react-hook-form";
+import type { LoginUser } from "@repo/schema/types";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { LoginUserSchema } from "../../../../packages/schema/src/user/user.schema";
+import useLoginUser from "@/lib/mutations/login-user";
+import { showToast } from "@/lib/toast";
 
 export function LoginForm() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [rememberMe, setRememberMe] = useState(false);
+  const { mutate: loginUser, isPending } = useLoginUser();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginUser>({
+    resolver: zodResolver(LoginUserSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  const onSubmit = (data: LoginUser) => {
+    loginUser(data, {
+      onSuccess: () => {
+        showToast.success("Welcome back! Login successful.");
+      },
+      onError: (error: any) => {
+        const errorMessage =
+          error?.response?.data?.message ||
+          error?.message ||
+          "Login failed. Please try again.";
+        showToast.error(errorMessage);
+      },
+    });
+  };
 
   return (
     <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-lg p-8 shadow-2xl">
@@ -27,7 +57,7 @@ export function LoginForm() {
       </div>
 
       {/* Form */}
-      <form className="space-y-6">
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         {/* Email field */}
         <div>
           <label htmlFor="email" className="block text-sm text-slate-400 mb-2">
@@ -37,10 +67,12 @@ export function LoginForm() {
             id="email"
             type="email"
             placeholder="info@example.com"
-            value={email}
-            onChange={e => setEmail(e.target.value)}
+            {...register("email")}
             className="bg-slate-700/50 border-slate-600 text-white placeholder:text-slate-400 focus:border-emerald-400 focus:ring-emerald-400/20"
           />
+          {errors.email && (
+            <p className="text-red-400 text-sm mt-1">{errors.email.message}</p>
+          )}
         </div>
 
         {/* Password field */}
@@ -55,18 +87,20 @@ export function LoginForm() {
             id="password"
             type="password"
             placeholder="••••••"
-            value={password}
-            onChange={e => setPassword(e.target.value)}
+            {...register("password")}
             className="bg-slate-700/50 border-slate-600 text-white placeholder:text-slate-400 focus:border-emerald-400 focus:ring-emerald-400/20"
           />
+          {errors.password && (
+            <p className="text-red-400 text-sm mt-1">
+              {errors.password.message}
+            </p>
+          )}
         </div>
 
-        {/* Remember me checkbox */}
+        {/* Remember me checkbox - UI only, not in form data */}
         <div className="flex items-center space-x-2">
           <Checkbox
             id="remember"
-            checked={rememberMe}
-            onCheckedChange={checked => setRememberMe(checked as boolean)}
             className="border-slate-600 data-[state=checked]:bg-emerald-500 data-[state=checked]:border-emerald-500"
           />
           <label
@@ -80,9 +114,10 @@ export function LoginForm() {
         {/* Login button */}
         <Button
           type="submit"
-          className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-medium py-3 rounded-lg transition-colors"
+          disabled={isPending}
+          className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-medium py-3 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          Log in
+          {isPending ? "Logging in..." : "Log in"}
         </Button>
 
         {/* Forgot password link */}
