@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -11,6 +11,7 @@ import { showToast } from "@/lib/toast";
 
 export function SignupForm() {
   const { mutate: registerUser, isPending } = useRegisterUser();
+  const navigate = useNavigate();
 
   const {
     register,
@@ -31,6 +32,7 @@ export function SignupForm() {
         showToast.success(
           "Account created successfully! Welcome to UptimeRobot."
         );
+        navigate("/login");
       },
       onError: (error: any) => {
         const errorMessage =

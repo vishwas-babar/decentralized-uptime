@@ -8,6 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { LoginUserSchema } from "../../../../packages/schema/src/user/user.schema";
 import useLoginUser from "@/lib/mutations/login-user";
 import { showToast } from "@/lib/toast";
+import { setBearerToken } from "@/utils/token";
 
 export function LoginForm() {
   const { mutate: loginUser, isPending } = useLoginUser();
@@ -26,8 +27,10 @@ export function LoginForm() {
 
   const onSubmit = (data: LoginUser) => {
     loginUser(data, {
-      onSuccess: () => {
+      onSuccess: res => {
         showToast.success("Welcome back! Login successful.");
+        setBearerToken(res.data.token);
+        window.location.href = "/dashboard";
       },
       onError: (error: any) => {
         const errorMessage =

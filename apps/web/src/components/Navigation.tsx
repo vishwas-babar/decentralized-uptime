@@ -10,9 +10,12 @@ import {
   LogOut,
   User,
 } from "lucide-react";
+import useSession from "@/hooks/useSession";
+import { removeBearerToken } from "@/utils/token";
 
 export function Navigation() {
   const location = useLocation();
+  const { session } = useSession();
 
   const navItems = [
     { path: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -76,7 +79,7 @@ export function Navigation() {
             <div className="flex items-center gap-3 bg-slate-700/50 px-4 py-2 rounded-lg">
               <div className="flex items-center gap-2">
                 <User className="h-4 w-4 text-slate-400" />
-                <span className="text-white text-sm">admin@uptime.com</span>
+                <span className="text-white text-sm">{session?.email}</span>
               </div>
               <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30 text-xs">
                 Pro
@@ -84,15 +87,17 @@ export function Navigation() {
             </div>
 
             {/* Logout */}
-            <Link to="/login">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="text-slate-400 hover:text-red-400 hover:bg-slate-700"
-              >
-                <LogOut className="h-5 w-5" />
-              </Button>
-            </Link>
+            <Button
+              onClick={() => {
+                removeBearerToken();
+                window.location.reload();
+              }}
+              variant="ghost"
+              size="icon"
+              className="text-slate-400 hover:text-red-400 hover:bg-slate-700"
+            >
+              <LogOut className="h-5 w-5" />
+            </Button>
           </div>
         </div>
       </div>

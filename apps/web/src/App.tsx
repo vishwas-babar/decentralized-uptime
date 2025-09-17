@@ -9,6 +9,7 @@ import "./App.css";
 import RewardsPage from "./pages/RewardsPage";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "react-hot-toast";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   const queryClient = new QueryClient();
@@ -20,11 +21,15 @@ function App() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/signup" element={<SignupPage />} />
-          <Route path="/dashboard" element={<DashboardPage />} />
-          <Route path="/validators" element={<ValidatorsPage />} />
-          <Route path="/monitors" element={<MonitorsPage />} />
-          <Route path="/rewards" element={<RewardsPage />} />
+
+          <Route element={<ProtectedRoute />}>
+            <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/validators" element={<ValidatorsPage />} />
+            <Route path="/monitors" element={<MonitorsPage />} />
+            <Route path="/rewards" element={<RewardsPage />} />
+          </Route>
         </Routes>
+
         <Toaster
           position="top-right"
           toastOptions={{
