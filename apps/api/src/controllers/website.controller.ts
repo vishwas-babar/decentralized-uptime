@@ -4,146 +4,146 @@ import { UrlSchema } from "@repo/schema";
 import { formatZodError } from "../utils/zodError";
 
 export const handleGenerateWebsite = async (req: Request, res: Response) => {
-  const { url } = req.body;
-  const { id: userId } = req.user;
+   const { url } = req.body;
+   const { id: userId } = req.user;
 
-  try {
-    const parsed = UrlSchema.safeParse({ url });
-    if (!parsed.success) {
-      return res.status(400).json({
-        success: false,
-        message: formatZodError(parsed.error),
-        errors: parsed.error.format(),
+   try {
+      const parsed = UrlSchema.safeParse({ url });
+      if (!parsed.success) {
+         return res.status(400).json({
+            success: false,
+            message: formatZodError(parsed.error),
+            errors: parsed.error.format(),
+         });
+      }
+
+      const website = await prisma.website.create({
+         data: {
+            url: parsed.data.url,
+            user: { connect: { id: userId } },
+         },
       });
-    }
 
-    const website = await prisma.website.create({
-      data: {
-        url: parsed.data.url,
-        user: { connect: { id: userId } },
-      },
-    });
-
-    res.status(201).json({
-      success: true,
-      message: "Website created successfully",
-      data: website,
-    });
-  } catch (error) {
-    console.error("Failed to create the website:", error);
-    res.status(500).json({
-      success: false,
-      message: "Server error",
-    });
-  }
+      res.status(201).json({
+         success: true,
+         message: "Website created successfully",
+         data: website,
+      });
+   } catch (error) {
+      console.error("Failed to create the website:", error);
+      res.status(500).json({
+         success: false,
+         message: "Server error",
+      });
+   }
 };
 
 export const handleGetAllWebsiteForUser = async (
-  req: Request,
-  res: Response
+   req: Request,
+   res: Response
 ) => {
-  const { id: userId } = req.user;
+   const { id: userId } = req.user;
 
-  try {
-    const websites = await prisma.website.findMany({
-      where: { userId },
-    });
+   try {
+      const websites = await prisma.website.findMany({
+         where: { userId },
+      });
 
-    res.status(200).json({
-      success: true,
-      message: "Websites fetched successfully",
-      data: websites,
-    });
-  } catch (error) {
-    console.error("Failed to fetch websites:", error);
-    res.status(500).json({
-      success: false,
-      message: "Server error",
-    });
-  }
+      res.status(200).json({
+         success: true,
+         message: "Websites fetched successfully",
+         data: websites,
+      });
+   } catch (error) {
+      console.error("Failed to fetch websites:", error);
+      res.status(500).json({
+         success: false,
+         message: "Server error",
+      });
+   }
 };
 
 export const handleGetWebsiteStatus = async (req: Request, res: Response) => {
-  const { id: userId } = req.user;
+   const { id: userId } = req.user;
 
-  try {
-    const websites = await prisma.website.findMany({
-      where: { userId },
-      include: {
-        ticks: true,
-      },
-    });
+   try {
+      const websites = await prisma.website.findMany({
+         where: { userId },
+         include: {
+            ticks: true,
+         },
+      });
 
-    res.status(200).json({
-      success: true,
-      message: "Website statuses fetched successfully",
-      data: websites,
-    });
-  } catch (error) {
-    console.error("Failed to fetch website statuses:", error);
-    res.status(500).json({
-      success: false,
-      message: "Server error",
-    });
-  }
+      res.status(200).json({
+         success: true,
+         message: "Website statuses fetched successfully",
+         data: websites,
+      });
+   } catch (error) {
+      console.error("Failed to fetch website statuses:", error);
+      res.status(500).json({
+         success: false,
+         message: "Server error",
+      });
+   }
 };
 
 export const handleGetWebsiteById = async (req: Request, res: Response) => {
-  const { id: userId } = req.user;
-  const { id } = req.params;
+   const { id: userId } = req.user;
+   const { id } = req.params;
 
-  try {
-    const website = await prisma.website.findFirst({
-      where: { id, userId },
-    });
-
-    if (!website) {
-      return res.status(404).json({
-        success: false,
-        message: "Website not found",
+   try {
+      const website = await prisma.website.findFirst({
+         where: { id, userId },
       });
-    }
 
-    res.status(200).json({
-      success: true,
-      message: "Website fetched successfully",
-      data: website,
-    });
-  } catch (error) {
-    console.error("Failed to fetch the website:", error);
-    res.status(500).json({
-      success: false,
-      message: "Server error",
-    });
-  }
+      if (!website) {
+         return res.status(404).json({
+            success: false,
+            message: "Website not found",
+         });
+      }
+
+      res.status(200).json({
+         success: true,
+         message: "Website fetched successfully",
+         data: website,
+      });
+   } catch (error) {
+      console.error("Failed to fetch the website:", error);
+      res.status(500).json({
+         success: false,
+         message: "Server error",
+      });
+   }
 };
 
 export const handleDeleteWebsiteById = async (req: Request, res: Response) => {
-  const { id: userId } = req.user;
-  const { id } = req.params;
+   const { id: userId } = req.user;
+   const { id } = req.params;
 
-  try {
-    const website = await prisma.website.update({
-      where: { id, userId },
-      data: { disabled: true },
-    });
-
-    if (!website) {
-      return res.status(404).json({
-        success: false,
-        message: "Website not found",
+   try {
+      const website = await prisma.website.update({
+         where: { id, userId },
+         data: { disabled: true },
       });
-    }
 
-    res.status(200).json({
-      success: true,
-      message: "Website deleted successfully",
-    });
-  } catch (error) {
-    console.error("Failed to delete the website:", error);
-    res.status(500).json({
-      success: false,
-      message: "Server error",
-    });
-  }
+      if (!website) {
+         return res.status(404).json({
+            success: false,
+            message: "Website not found",
+         });
+      }
+
+      res.status(200).json({
+         success: true,
+         message: "Website deleted successfully",
+      });
+   } catch (error) {
+      console.error("Failed to delete the website:", error);
+      res.status(500).json({
+         success: false,
+         message: "Server error",
+      });
+   }
 };

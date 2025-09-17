@@ -5,13 +5,13 @@ import { WhyDecentralizedSection } from "@/components/landing/WhyDecentralizedSe
 import { Footer } from "@/components/landing/Footer";
 
 export default function LandingPage() {
-  return (
-    <div className="min-h-screen bg-slate-950">
-      <HeroSection />
-      <FeaturesSection />
-      <HowItWorksSection />
-      <WhyDecentralizedSection />
-      <Footer />
-    </div>
-  );
+   return (
+      <div className="min-h-screen bg-slate-950">
+         <HeroSection />
+         <FeaturesSection />
+         <HowItWorksSection />
+         <WhyDecentralizedSection />
+         <Footer />
+      </div>
+   );
 }

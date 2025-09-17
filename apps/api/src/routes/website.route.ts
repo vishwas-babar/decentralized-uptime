@@ -1,11 +1,11 @@
 import { Router } from "express";
 import { authenticateToken } from "../middleware/auth.middleware";
 import {
-  handleDeleteWebsiteById,
-  handleGenerateWebsite,
-  handleGetAllWebsiteForUser,
-  handleGetWebsiteById,
-  handleGetWebsiteStatus,
+   handleDeleteWebsiteById,
+   handleGenerateWebsite,
+   handleGetAllWebsiteForUser,
+   handleGetWebsiteById,
+   handleGetWebsiteStatus,
 } from "../controllers/website.controller";
 
 const router: Router = Router();

@@ -2,11 +2,11 @@ import useSession from "@/hooks/useSession";
 import { Navigate, Outlet } from "react-router-dom";
 
 function ProtectedRoute() {
-  const { status } = useSession();
+   const { status } = useSession();
 
-  if (status === "loading") return <div>Loading...</div>; // while checking session
+   if (status === "loading") return <div>Loading...</div>; // while checking session
 
-  return status === "authenticated" ? <Outlet /> : <Navigate to="/login" />;
+   return status === "authenticated" ? <Outlet /> : <Navigate to="/login" />;
 }
 
 export default ProtectedRoute;

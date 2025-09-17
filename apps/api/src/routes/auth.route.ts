@@ -1,9 +1,9 @@
 import { Router } from "express";
 import { authenticateToken } from "../middleware/auth.middleware";
 import {
-  getSessionUser,
-  handleLoginUser,
-  handleRegisterUser,
+   getSessionUser,
+   handleLoginUser,
+   handleRegisterUser,
 } from "../controllers/user.controller";
 
 const router: Router = Router();

@@ -8,15 +8,15 @@ app.use(express.json());
 
 // Routes
 app.get("/", (req: Request, res: Response) => {
-  res.send("Hello, Hub Express + TypeScript is live! 🚀");
+   res.send("Hello, Hub Express + TypeScript is live! 🚀");
 });
 
 app.post("/data", (req: Request, res: Response) => {
-  const body = req.body;
-  res.json({ message: "Data received from Hub!", body });
+   const body = req.body;
+   res.json({ message: "Data received from Hub!", body });
 });
 
 // Start server
 app.listen(PORT, () => {
-  console.log(`✅ Hub Server running at http://localhost:${PORT}`);
+   console.log(`✅ Hub Server running at http://localhost:${PORT}`);
 });
