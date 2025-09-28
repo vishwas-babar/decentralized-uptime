@@ -12,7 +12,7 @@ import {
 import { Plus } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { UrlSchema } from '@repo/schema'
+import { UrlSchema } from "@repo/schema";
 import type { CreateUrlSchema } from "@repo/schema/types";
 import { useCreateWebsite } from "@/lib/mutations/website/create-website";
 import { showToast } from "@/lib/toast";
@@ -23,32 +23,40 @@ interface CreateMonitorDialogProps {
    onOpenChange: (open: boolean) => void;
 }
 
-export function CreateMonitorDialog({ isOpen, onOpenChange }: CreateMonitorDialogProps) {
-    const { register, handleSubmit, formState: { errors }, reset } = useForm<CreateUrlSchema>({
-        resolver: zodResolver(UrlSchema),
-        defaultValues: { name: '', url: '', checkInterval: 1, contactEmail: '' }
-    })
+export function CreateMonitorDialog({
+   isOpen,
+   onOpenChange,
+}: CreateMonitorDialogProps) {
+   const {
+      register,
+      handleSubmit,
+      formState: { errors },
+      reset,
+   } = useForm<CreateUrlSchema>({
+      resolver: zodResolver(UrlSchema),
+      defaultValues: { name: "", url: "", checkInterval: 1, contactEmail: "" },
+   });
 
-    const { mutate: createWebsite, isPending } = useCreateWebsite();
-    const queryClient = useQueryClient();
+   const { mutate: createWebsite, isPending } = useCreateWebsite();
+   const queryClient = useQueryClient();
 
-    const onSubmit = (data: CreateUrlSchema) => {
-        console.log("Creating monitor:", data);
-        createWebsite(data, {
-            onSuccess: (response) => {
-                console.log("Website created successfully:", response);
-                showToast.success('Website created successfully');
-                queryClient.invalidateQueries({ queryKey: ["get-user-websites"] });
-                reset();
-                onOpenChange(false);
-            },
-            onError: () => {
-                showToast.error('Failed to create website');
-            }
-        });
-    }
+   const onSubmit = (data: CreateUrlSchema) => {
+      console.log("Creating monitor:", data);
+      createWebsite(data, {
+         onSuccess: response => {
+            console.log("Website created successfully:", response);
+            showToast.success("Website created successfully");
+            queryClient.invalidateQueries({ queryKey: ["get-user-websites"] });
+            reset();
+            onOpenChange(false);
+         },
+         onError: () => {
+            showToast.error("Failed to create website");
+         },
+      });
+   };
 
-    return (
+   return (
       <Dialog open={isOpen} onOpenChange={onOpenChange}>
          <DialogTrigger asChild>
             <Button className="bg-emerald-600 hover:bg-emerald-700 text-white">
@@ -58,9 +66,12 @@ export function CreateMonitorDialog({ isOpen, onOpenChange }: CreateMonitorDialo
          </DialogTrigger>
          <DialogContent className="bg-slate-800 border-slate-700 text-white max-w-md">
             <DialogHeader>
-               <DialogTitle className="text-white">Create New Monitor</DialogTitle>
+               <DialogTitle className="text-white">
+                  Create New Monitor
+               </DialogTitle>
                <DialogDescription className="text-slate-400">
-                  Add a new website or service to monitor for uptime and performance.
+                  Add a new website or service to monitor for uptime and
+                  performance.
                </DialogDescription>
             </DialogHeader>
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
@@ -75,7 +86,9 @@ export function CreateMonitorDialog({ isOpen, onOpenChange }: CreateMonitorDialo
                      className="bg-slate-700 border-slate-600 text-white placeholder:text-slate-400"
                   />
                   {errors.name && (
-                     <p className="text-red-400 text-sm mt-1">{errors.name.message}</p>
+                     <p className="text-red-400 text-sm mt-1">
+                        {errors.name.message}
+                     </p>
                   )}
                </div>
 
@@ -91,7 +104,9 @@ export function CreateMonitorDialog({ isOpen, onOpenChange }: CreateMonitorDialo
                      className="bg-slate-700 border-slate-600 text-white placeholder:text-slate-400"
                   />
                   {errors.url && (
-                     <p className="text-red-400 text-sm mt-1">{errors.url.message}</p>
+                     <p className="text-red-400 text-sm mt-1">
+                        {errors.url.message}
+                     </p>
                   )}
                </div>
 
@@ -109,7 +124,9 @@ export function CreateMonitorDialog({ isOpen, onOpenChange }: CreateMonitorDialo
                      className="bg-slate-700 border-slate-600 text-white placeholder:text-slate-400"
                   />
                   {errors.checkInterval && (
-                     <p className="text-red-400 text-sm mt-1">{errors.checkInterval.message}</p>
+                     <p className="text-red-400 text-sm mt-1">
+                        {errors.checkInterval.message}
+                     </p>
                   )}
                </div>
 
@@ -125,7 +142,9 @@ export function CreateMonitorDialog({ isOpen, onOpenChange }: CreateMonitorDialo
                      className="bg-slate-700 border-slate-600 text-white placeholder:text-slate-400"
                   />
                   {errors.contactEmail && (
-                     <p className="text-red-400 text-sm mt-1">{errors.contactEmail.message}</p>
+                     <p className="text-red-400 text-sm mt-1">
+                        {errors.contactEmail.message}
+                     </p>
                   )}
                </div>
 
@@ -143,7 +162,7 @@ export function CreateMonitorDialog({ isOpen, onOpenChange }: CreateMonitorDialo
                      type="submit"
                      className="bg-emerald-600 hover:bg-emerald-700 text-white"
                   >
-                    {isPending ? 'Creating...' : 'Create Monitor'}
+                     {isPending ? "Creating..." : "Create Monitor"}
                   </Button>
                </div>
             </form>

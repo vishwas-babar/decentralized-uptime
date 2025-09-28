@@ -20,7 +20,7 @@ export function MonitorFilters({
    filter,
    onFilterChange,
    totalMonitors,
-   upMonitors
+   upMonitors,
 }: MonitorFiltersProps) {
    return (
       <Card className="bg-slate-800/50 border-slate-700 mb-8">

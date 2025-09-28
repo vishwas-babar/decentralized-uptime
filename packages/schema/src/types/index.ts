@@ -8,5 +8,4 @@ export type RegisterUser = z.infer<typeof RegisterUserSchema>;
 
 export * from "./session.type";
 
-
 export type CreateUrlSchema = z.infer<typeof UrlSchema>;

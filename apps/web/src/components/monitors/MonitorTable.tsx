@@ -31,17 +31,13 @@ interface MonitorTableProps {
 }
 
 export function MonitorTable({ monitors }: MonitorTableProps) {
+   const { data, isLoading, isError } = useGetUserWebsites();
 
-
-    const { data, isLoading, isError } = useGetUserWebsites();
-
-    useEffect(() => {
+   useEffect(() => {
       console.log("Websites data:", data, isLoading, isError);
 
-      return () => {
-      }
-    }, [data, isLoading, isError])
-
+      return () => {};
+   }, [data, isLoading, isError]);
 
    const getStatusIcon = (status: string) => {
       if (status === "up") {
@@ -65,25 +61,25 @@ export function MonitorTable({ monitors }: MonitorTableProps) {
       );
    };
 
-    if (isLoading) {
-       return (
-          <Card className="bg-slate-800/50 border-slate-700">
-             <CardContent>
-                <p className="text-slate-400">Loading...</p>
-             </CardContent>
-          </Card>
-       );
-    }
+   if (isLoading) {
+      return (
+         <Card className="bg-slate-800/50 border-slate-700">
+            <CardContent>
+               <p className="text-slate-400">Loading...</p>
+            </CardContent>
+         </Card>
+      );
+   }
 
-    if (isError) {
-       return (
-          <Card className="bg-slate-800/50 border-slate-700">
-             <CardContent>
-                <p className="text-red-400">Error loading websites</p>
-             </CardContent>
-          </Card>
-       );
-    }
+   if (isError) {
+      return (
+         <Card className="bg-slate-800/50 border-slate-700">
+            <CardContent>
+               <p className="text-red-400">Error loading websites</p>
+            </CardContent>
+         </Card>
+      );
+   }
 
    return (
       <Card className="bg-slate-800/50 border-slate-700">
@@ -99,10 +95,16 @@ export function MonitorTable({ monitors }: MonitorTableProps) {
                   <TableRow className="border-slate-700">
                      <TableHead className="text-slate-400">Monitor</TableHead>
                      <TableHead className="text-slate-400">Status</TableHead>
-                     <TableHead className="text-slate-400">Response Time</TableHead>
-                     <TableHead className="text-slate-400">Last Checked</TableHead>
+                     <TableHead className="text-slate-400">
+                        Response Time
+                     </TableHead>
+                     <TableHead className="text-slate-400">
+                        Last Checked
+                     </TableHead>
                      <TableHead className="text-slate-400">7d Uptime</TableHead>
-                     <TableHead className="text-slate-400">30d Uptime</TableHead>
+                     <TableHead className="text-slate-400">
+                        30d Uptime
+                     </TableHead>
                      <TableHead className="text-slate-400">Location</TableHead>
                      <TableHead className="text-slate-400">Alerts</TableHead>
                   </TableRow>
@@ -115,8 +117,12 @@ export function MonitorTable({ monitors }: MonitorTableProps) {
                      >
                         <TableCell>
                            <div>
-                              <p className="text-white font-medium">{monitor.name}</p>
-                              <p className="text-slate-400 text-sm">{monitor.url}</p>
+                              <p className="text-white font-medium">
+                                 {monitor.name}
+                              </p>
+                              <p className="text-slate-400 text-sm">
+                                 {monitor.url}
+                              </p>
                               <p className="text-slate-500 text-xs">
                                  Every {monitor.checkInterval}
                               </p>
@@ -135,9 +141,15 @@ export function MonitorTable({ monitors }: MonitorTableProps) {
                            <Clock className="h-3 w-3" />
                            {monitor.lastChecked}
                         </TableCell>
-                        <TableCell className="text-slate-300">{monitor.uptime7d}</TableCell>
-                        <TableCell className="text-slate-300">{monitor.uptime30d}</TableCell>
-                        <TableCell className="text-slate-400">{monitor.location}</TableCell>
+                        <TableCell className="text-slate-300">
+                           {monitor.uptime7d}
+                        </TableCell>
+                        <TableCell className="text-slate-300">
+                           {monitor.uptime30d}
+                        </TableCell>
+                        <TableCell className="text-slate-400">
+                           {monitor.location}
+                        </TableCell>
                         <TableCell>
                            {monitor.alertsEnabled ? (
                               <Badge className="bg-blue-500/20 text-blue-400 border-blue-500/30">

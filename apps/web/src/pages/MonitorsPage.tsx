@@ -107,7 +107,6 @@ export default function MonitorsPage() {
          0
       ) / monitorsData.length;
 
-
    return (
       <div className="min-h-screen">
          {/* Fixed background that covers entire viewport */}

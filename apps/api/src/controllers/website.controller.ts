@@ -8,7 +8,12 @@ export const handleGenerateWebsite = async (req: Request, res: Response) => {
    const { id: userId } = req.user;
 
    try {
-      const parsed = UrlSchema.safeParse({ url, name, checkInterval, contactEmail });
+      const parsed = UrlSchema.safeParse({
+         url,
+         name,
+         checkInterval,
+         contactEmail,
+      });
       if (!parsed.success) {
          return res.status(400).json({
             success: false,
