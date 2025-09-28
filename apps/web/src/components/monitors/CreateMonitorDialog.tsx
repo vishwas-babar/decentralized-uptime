@@ -17,6 +17,7 @@ import type { CreateUrlSchema } from "@repo/schema/types";
 import { useCreateWebsite } from "@/lib/mutations/website/create-website";
 import { showToast } from "@/lib/toast";
 import { useQueryClient } from "@tanstack/react-query";
+import { useEffect } from "react";
 
 interface CreateMonitorDialogProps {
    isOpen: boolean;
@@ -32,10 +33,19 @@ export function CreateMonitorDialog({
       handleSubmit,
       formState: { errors },
       reset,
+      watch,
    } = useForm<CreateUrlSchema>({
       resolver: zodResolver(UrlSchema),
       defaultValues: { name: "", url: "", checkInterval: 1, contactEmail: "" },
    });
+
+   const url = watch("url");
+
+   useEffect(() => {
+      console.log(url);
+
+      return () => {};
+   }, [url]);
 
    const { mutate: createWebsite, isPending } = useCreateWebsite();
    const queryClient = useQueryClient();
@@ -98,7 +108,7 @@ export function CreateMonitorDialog({
                   </Label>
                   <Input
                      id="url"
-                     type="url"
+                     type="text"
                      {...register("url")}
                      placeholder="https://example.com"
                      className="bg-slate-700 border-slate-600 text-white placeholder:text-slate-400"

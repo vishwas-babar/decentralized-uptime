@@ -2,6 +2,7 @@ import prisma from "@repo/db";
 import { Request, Response } from "express";
 import { UrlSchema } from "@repo/schema";
 import { formatZodError } from "../utils/zodError";
+import { calculateWebsitesStats } from "../helpers";
 
 export const handleGenerateWebsite = async (req: Request, res: Response) => {
    const { url, name, checkInterval, contactEmail } = req.body;
@@ -76,16 +77,44 @@ export const handleGetWebsiteStatus = async (req: Request, res: Response) => {
 
    try {
       const websites = await prisma.website.findMany({
-         where: { userId },
+         where: {
+            userId,
+            disabled: false,
+         },
          include: {
-            ticks: true,
+            ticks: {
+               take: 50, // Get last 50 ticks
+               orderBy: {
+                  createdAt: "desc",
+               },
+               include: {
+                  validator: {
+                     select: {
+                        id: true,
+                        location: true,
+                        ip: true,
+                     },
+                  },
+               },
+            },
+         },
+         orderBy: {
+            createdAt: "desc",
          },
       });
+
+      // Transform the data to include uptime calculations and status summary
+      const websitesWithStats = calculateWebsitesStats(websites);
 
       res.status(200).json({
          success: true,
          message: "Website statuses fetched successfully",
-         data: websites,
+         data: websitesWithStats,
+         meta: {
+            timeRange: "Last 50 ticks",
+            timestamp: new Date().toISOString(),
+            totalWebsites: websitesWithStats.length,
+         },
       });
    } catch (error) {
       console.error("Failed to fetch website statuses:", error);

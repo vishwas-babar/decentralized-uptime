@@ -12,6 +12,7 @@
       "prisma:migrate": "npx prisma migrate dev",
       "prisma:studio": "npx prisma studio",
       "prisma:reset": "npx prisma migrate reset",
+      "prisma:seed": "npx ts-node prisma/seed.ts",
       "build": "tsc -b",
       "dev": "tsc -b --watch"
    },
@@ -19,11 +20,15 @@
    "author": "",
    "license": "ISC",
    "devDependencies": {
-      "prisma": "6.11.1"
+      "@types/node": "^20.14.10",
+      "prisma": "6.11.1",
+      "tsx": "^4.16.2"
    },
    "dependencies": {
-      "@repo/typescript-config": "workspace:*",
+      "@prisma/client": "6.11.1",
       "@repo/eslint-config": "workspace:*",
-      "@prisma/client": "6.11.1"
+      "@repo/typescript-config": "workspace:*",
+      "@types/bcrypt": "^6.0.0",
+      "bcrypt": "^6.0.0"
    }
 }
