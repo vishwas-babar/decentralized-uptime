@@ -4,11 +4,11 @@ import { UrlSchema } from "@repo/schema";
 import { formatZodError } from "../utils/zodError";
 
 export const handleGenerateWebsite = async (req: Request, res: Response) => {
-   const { url } = req.body;
+   const { url, name, checkInterval, contactEmail } = req.body;
    const { id: userId } = req.user;
 
    try {
-      const parsed = UrlSchema.safeParse({ url });
+      const parsed = UrlSchema.safeParse({ url, name, checkInterval, contactEmail });
       if (!parsed.success) {
          return res.status(400).json({
             success: false,
@@ -20,6 +20,9 @@ export const handleGenerateWebsite = async (req: Request, res: Response) => {
       const website = await prisma.website.create({
          data: {
             url: parsed.data.url,
+            name: parsed.data.name,
+            checkInterval: parsed.data.checkInterval,
+            contactEmail: parsed.data.contactEmail,
             user: { connect: { id: userId } },
          },
       });

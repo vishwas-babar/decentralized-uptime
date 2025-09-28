@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import type { RegisterUser } from "@repo/schema/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { RegisterUserSchema } from "../../../../packages/schema/src/user/user.schema";
-import useRegisterUser from "@/lib/mutations/register-user";
+import useRegisterUser from "@/lib/mutations/user/register-user";
 import { showToast } from "@/lib/toast";
 
 export function SignupForm() {

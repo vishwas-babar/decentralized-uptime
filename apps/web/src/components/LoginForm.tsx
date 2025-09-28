@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import type { LoginUser } from "@repo/schema/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { LoginUserSchema } from "../../../../packages/schema/src/user/user.schema";
-import useLoginUser from "@/lib/mutations/login-user";
+import useLoginUser from "@/lib/mutations/user/login-user";
 import { showToast } from "@/lib/toast";
 import { setBearerToken } from "@/utils/token";
 

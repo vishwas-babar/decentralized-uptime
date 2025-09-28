@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import type { RegisterUser } from "@repo/schema/types";
-import { API_ROUTES } from "../api-routes";
-import ax from "../axios";
+import { API_ROUTES } from "../../api-routes";
+import ax from "../../axios";
 
 const useRegisterUser = () => {
    return useMutation({

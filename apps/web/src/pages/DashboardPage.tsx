@@ -8,9 +8,11 @@ import { ChartsSection } from "../components/dashboard/ChartsSection";
 
 export default function DashboardPage() {
    return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-900">
+      <div className="min-h-screen">
+         {/* Fixed background that covers entire viewport */}
+         <div className="fixed inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-emerald-900 -z-10" />
          {/* Background decoration */}
-         <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(34,197,94,0.1),transparent)] pointer-events-none" />
+         <div className="fixed inset-0 bg-[radial-gradient(circle_at_50%_120%,rgba(34,197,94,0.1),transparent)] pointer-events-none -z-10" />
 
          <Navigation />
 
