@@ -43,10 +43,17 @@ model Website {
 }
 
 model Validator {
-  id        String   @id @default(cuid())
-  publicKey String
-  location  String
-  ip        String
+  id             String @id @default(cuid())
+  publicKey      String @unique
+  location       String
+  ip             String
+  pendingPayouts Int    @default(0)
+
+  // Connection status tracking
+  isConnected      Boolean   @default(false)
+  lastConnected    DateTime?
+  lastDisconnected DateTime?
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
