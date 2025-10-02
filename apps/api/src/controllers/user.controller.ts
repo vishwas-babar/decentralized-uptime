@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import { Request, Response } from "express";
 import { LoginUserSchema, RegisterUserSchema } from "@repo/schema";
 import { generateToken } from "../utils/jwt";
+import { calculateUserDashboardStats } from "../helpers/websiteStats";
 
 const handleLoginUser = async (req: Request, res: Response) => {
    const { email, password } = req.body;
@@ -158,4 +159,30 @@ const getSessionUser = async (req: Request, res: Response) => {
    }
 };
 
-export { handleLoginUser, handleRegisterUser, getSessionUser };
+const getUserStats = async (req: Request, res: Response) => {
+   try {
+      const userId = req.user?.id;
+
+      if (!userId) {
+         return res.status(401).json({
+            success: false,
+            message: "Unauthorized",
+         });
+      }
+
+      const stats = await calculateUserDashboardStats(userId);
+
+      res.status(200).json({
+         success: true,
+         data: stats,
+      });
+   } catch (error) {
+      console.error("Get user stats error:", error);
+      res.status(500).json({
+         success: false,
+         message: "Server error",
+      });
+   }
+};
+
+export { handleLoginUser, handleRegisterUser, getSessionUser, getUserStats };

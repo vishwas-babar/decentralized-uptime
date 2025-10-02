@@ -1,5 +1,6 @@
 import WebSocket from "ws";
 import { v4 as uuid } from "uuid";
+import axios from "axios";
 import {
    OutgoingMessage,
    IncomingMessage,
@@ -79,7 +80,7 @@ export class ValidatorClient {
          type: "signup",
          data: {
             callbackId,
-            ip: "127.0.0.1", // This could be made dynamic
+            ip: "127.0.0.1", // TODO: This could be made dynamic
             publicKey: this.keypair.publicKey.toBase58(),
             signedMessage,
          },
@@ -123,20 +124,16 @@ export class ValidatorClient {
             this.keypair
          );
 
-         // Use dynamic import for node-fetch since it's ESM
-         const fetch = (await import("node-fetch")).default;
-         const controller = new AbortController();
-         const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
-
-         const response = await fetch(data.url, {
-            signal: controller.signal,
+         // Use axios with built-in timeout
+         const response = await axios.get(data.url, {
+            timeout: 10000, // 10 second timeout
+            validateStatus: () => true, // Don't throw on 4xx/5xx status codes
          });
-
-         clearTimeout(timeoutId);
 
          const endTime = Date.now();
          const latency = endTime - startTime;
-         const status = response.ok ? "UP" : "DOWN";
+         const status =
+            response.status >= 200 && response.status < 300 ? "UP" : "DOWN";
 
          const responseMessage: IncomingMessage = {
             type: "validate",
@@ -155,7 +152,29 @@ export class ValidatorClient {
             `Validation complete for ${data.url}: ${status} (${latency}ms)`
          );
       } catch (error) {
-         console.error(`Validation failed for ${data.url}:`, error);
+         // Handle axios errors more gracefully
+         let errorMessage = "Unknown error";
+         if (axios.isAxiosError(error)) {
+            if (error.code === "ECONNABORTED") {
+               errorMessage = "Request timeout";
+            } else if (
+               error.code === "ENOTFOUND" ||
+               error.code === "ECONNREFUSED"
+            ) {
+               errorMessage = `Connection failed: ${error.code}`;
+            } else if (error.response) {
+               errorMessage = `HTTP ${error.response.status}: ${error.response.statusText}`;
+            } else if (error.request) {
+               errorMessage = "No response received";
+            } else {
+               errorMessage = error.message;
+            }
+         } else {
+            errorMessage =
+               error instanceof Error ? error.message : String(error);
+         }
+
+         console.error(`Validation failed for ${data.url}: ${errorMessage}`);
 
          // Send error response
          const signature = await signMessage(
