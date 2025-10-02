@@ -1,7 +1,7 @@
 import { Keypair } from "@solana/web3.js";
 
-import nacl from 'tweetnacl'
-import naclUtil from 'tweetnacl-util'
+import nacl from "tweetnacl";
+import naclUtil from "tweetnacl-util";
 
 export async function signMessage(
    message: string,
@@ -26,4 +26,3 @@ export function createKeypairFromEnv(privateKeyEnv: string): Keypair {
       );
    }
 }
-
