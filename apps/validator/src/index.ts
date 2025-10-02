@@ -1,22 +1,60 @@
 import express, { Request, Response } from "express";
+import { config } from "./config";
+import { createKeypairFromEnv } from "./utils/crypto";
+import { ValidatorClient } from "./services/validatorClient";
 
 const app = express();
-const PORT = process.env.PORT || 12002;
 
 // Middleware
 app.use(express.json());
 
-// Routes
-app.get("/", (req: Request, res: Response) => {
-   res.send("Hello, Validator Express + TypeScript is live! 🚀");
-});
+let validatorClient: ValidatorClient | null = null;
 
-app.post("/data", (req: Request, res: Response) => {
-   const body = req.body;
-   res.json({ message: "Data received from Validator!", body });
-});
+// Initialize validator client
+async function initializeValidator() {
+   try {
+      if (!config.PRIVATE_KEY) {
+         throw new Error("PRIVATE_KEY environment variable is required");
+      }
+
+      const keypair = createKeypairFromEnv(config.PRIVATE_KEY);
+      validatorClient = new ValidatorClient(keypair);
+
+      await validatorClient.connect();
+      console.log("✅ Validator client connected to hub");
+   } catch (error) {
+      console.error("❌ Failed to initialize validator:", error);
+      process.exit(1);
+   }
+}
 
 // Start server
-app.listen(PORT, () => {
-   console.log(`✅ Validator Server running at http://localhost:${PORT}`);
+app.listen(Number(config.PORT), () => {
+   console.log(
+      `✅ Validator HTTP Server running at http://localhost:${config.PORT}`
+   );
+
+   // Initialize validator client after HTTP server starts
+   initializeValidator();
+});
+
+// Graceful shutdown
+process.on("SIGINT", () => {
+   console.log("Shutting down validator service...");
+
+   if (validatorClient) {
+      validatorClient.disconnect();
+   }
+
+   process.exit(0);
+});
+
+process.on("SIGTERM", () => {
+   console.log("Shutting down validator service...");
+
+   if (validatorClient) {
+      validatorClient.disconnect();
+   }
+
+   process.exit(0);
 });

@@ -15,5 +15,24 @@
    "keywords": [],
    "author": "",
    "license": "ISC",
-   "dependencies": {}
+   "dependencies": {
+      "@bs58": "link:types/@bs58",
+      "@repo/schema": "workspace:*",
+      "@repo/server-utils": "workspace:*",
+      "@solana/web3.js": "^1.98.4",
+      "bs58": "^6.0.0",
+      "dotenv": "^16.6.1",
+      "express": "^4.21.2",
+      "node-fetch": "^3.3.2",
+      "tweetnacl": "^1.0.3",
+      "tweetnacl-util": "^0.15.1",
+      "uuid": "^9.0.1",
+      "ws": "^8.18.3"
+   },
+   "devDependencies": {
+      "@types/express": "^4.17.21",
+      "@types/node": "^20.0.0",
+      "@types/uuid": "^9.0.7",
+      "@types/ws": "^8.5.9"
+   }
 }
